@@ -29,10 +29,6 @@ class Herbivore(Animal):
         self.hidden = not self.hidden
 
 
-class Carnivore(Animal):
-    pass
-
-
 def bite(target: Animal) -> None:
     if (
         isinstance(target, Herbivore)
@@ -43,3 +39,7 @@ def bite(target: Animal) -> None:
         if target.health <= 0:
             target.health = 0
             target.die()
+
+
+class Carnivore(Animal):
+    pass
