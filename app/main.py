@@ -2,15 +2,29 @@ class Animal:
     alive = []
 
     def __init__(
-        self,
-        name: str,
-        health: int = 100,
-        hidden: bool = False
+            self,
+            name: str,
+            health: int = 100,
+            hidden: bool = False
     ) -> None:
         self.name = name
-        self.health = health
+        self._health = health
         self.hidden = hidden
-        Animal.alive.append(self)
+        if self._health > 0 and self not in Animal.alive:
+            Animal.alive.append(self)
+
+    @property
+    def health(self) -> int:
+        return self._health
+
+    @health.setter
+    def health(self, value: int) -> None:
+        self._health = max(0, min(100, value))
+
+        if self._health <= 0 and self in Animal.alive:
+            Animal.alive.remove(self)
+        elif self._health > 0 and self not in Animal.alive:
+            Animal.alive.append(self)
 
     def __repr__(self) -> str:
         return (
@@ -19,27 +33,20 @@ class Animal:
             f"Hidden: {self.hidden}}}"
         )
 
-    def die(self) -> None:
-        if self in Animal.alive:
-            Animal.alive.remove(self)
-
 
 class Herbivore(Animal):
     def hide(self) -> None:
         self.hidden = not self.hidden
 
 
-def bite(target: Animal) -> None:
-    if (
-        isinstance(target, Herbivore)
-        and not target.hidden
-        and target.health > 0
-    ):
-        target.health -= 50
-        if target.health <= 0:
-            target.health = 0
-            target.die()
-
-
 class Carnivore(Animal):
-    pass
+    def bite(self, target: "Animal") -> None:
+        if self.health <= 0:
+            return
+
+        if (
+            isinstance(target, Herbivore)
+            and not target.hidden
+            and target.health > 0
+        ):
+            target.health -= 50
