@@ -33,6 +33,7 @@ class Carnivore(Animal):
         self,
         target: Animal
     ) -> None:
+        # Carnivores can only bite herbivores that are not hiding
         if (
             isinstance(target, Herbivore)
             and not target.hidden
@@ -45,7 +46,8 @@ class Carnivore(Animal):
 def bite(
     target: Animal
 ) -> None:
-    # Find the most recently created Carnivore to perform the action
+    # Logic to find a carnivore to perform the action
+    # usually the last created carnivore in the alive list
     for animal in reversed(Animal.alive):
         if isinstance(animal, Carnivore):
             animal.bite(target)
