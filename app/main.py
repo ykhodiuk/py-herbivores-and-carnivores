@@ -40,7 +40,12 @@ class Herbivore(Animal):
 
 
 class Carnivore(Animal):
-    def bite(self, target: "Animal") -> None:
+    def bite(self, target: Animal) -> None:
+        """
+        Moves the bite logic into the Carnivore class.
+        A Carnivore can only bite if it is alive, and the target
+        is a visible, living Herbivore.
+        """
         if (
                 self.health > 0
                 and isinstance(target, Herbivore)
@@ -48,3 +53,7 @@ class Carnivore(Animal):
                 and target.health > 0
         ):
             target.health -= 50
+
+def bite(carnivore: Carnivore, target: Animal) -> None:
+    if isinstance(carnivore, Carnivore):
+        carnivore.bite(target)
