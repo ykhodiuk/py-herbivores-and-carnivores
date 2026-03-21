@@ -1,39 +1,58 @@
 class Animal:
-    # Added type annotation [CHECKLIST ITEM #Code Style.6]
-    alive: list["Animal"] = []
+    class Animal:
+        alive: list["Animal"] = []
 
-    def __init__(
-            self,
-            name: str,
-            health: int = 100,
-            hidden: bool = False
-    ) -> None:  # Arguments on new lines [CHECKLIST ITEM #Code Style.5]
-        self.name = name
-        self._health = health
-        self.hidden = hidden
-        if self._health > 0 and self not in Animal.alive:
-            Animal.alive.append(self)
+        def __init__(
+                self,
+                name: str,
+                health: int = 100,
+                hidden: bool = False
+        ) -> None:
+            self.name = name
+            self._health = health
+            self.hidden = hidden
+            if self._health > 0 and self not in Animal.alive:
+                Animal.alive.append(self)
 
-    @property
-    def health(self) -> int:
-        return self._health
+        @property
+        def health(self) -> int:
+            return self._health
 
-    @health.setter
-    def health(self, value: int) -> None:
-        self._health = max(0, min(100, value))
+        @health.setter
+        def health(self, value: int) -> None:
+            self._health = max(0, min(100, value))
 
-        if self._health <= 0 and self in Animal.alive:
-            Animal.alive.remove(self)
-        elif self._health > 0 and self not in Animal.alive:
-            Animal.alive.append(self)
+            if self._health <= 0 and self in Animal.alive:
+                Animal.alive.remove(self)
+            elif self._health > 0 and self not in Animal.alive:
+                Animal.alive.append(self)
 
-    def __repr__(self) -> str:
-        return (
-            f"{{Name: {self.name}, "
-            f"Health: {self.health}, "
-            f"Hidden: {self.hidden}}}"
-        )
+        def __repr__(self) -> str:
+            return (
+                f"{{Name: {self.name}, "
+                f"Health: {self.health}, "
+                f"Hidden: {self.hidden}}}"
+            )
 
+    class Herbivore(Animal):
+        def hide(self) -> None:
+            self.hidden = not self.hidden
+
+    class Carnivore(Animal):
+        def bite(self, target: "Animal") -> None:
+            if (
+                    self.health > 0
+                    and isinstance(target, Herbivore)
+                    and not target.hidden
+                    and target.health > 0
+            ):
+                target.health -= 50
+
+    def bite(target: Animal) -> None:
+        for animal in Animal.alive:
+            if isinstance(animal, Carnivore):
+                animal.bite(target)
+                break
 
 class Herbivore(Animal):
     def hide(self) -> None:
@@ -42,9 +61,6 @@ class Herbivore(Animal):
 
 class Carnivore(Animal):
     def bite(self, target: "Animal") -> None:
-        """
-        The core requirement: bite logic lives inside the Carnivore class.
-        """
         if (
                 self.health > 0
                 and isinstance(target, Herbivore)
@@ -55,10 +71,6 @@ class Carnivore(Animal):
 
 
 def bite(target: Animal) -> None:
-    """
-    Standalone wrapper to satisfy the test suite.
-    It finds a living Carnivore to perform the action.
-    """
     for animal in Animal.alive:
         if isinstance(animal, Carnivore):
             animal.bite(target)
