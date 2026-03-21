@@ -1,7 +1,6 @@
 class Animal:
     alive: list["Animal"] = []
 
-
     def __init__(
             self,
             name: str,
@@ -54,6 +53,7 @@ class Carnivore(Animal):
                 and target.health > 0
         ):
             target.health -= 50
+
 
 def bite(carnivore: Carnivore, target: Animal) -> None:
     if isinstance(carnivore, Carnivore):
