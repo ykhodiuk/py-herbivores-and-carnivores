@@ -29,26 +29,16 @@ class Herbivore(Animal):
 
 
 class Carnivore(Animal):
-    def bite(
-        self,
-        target: Animal
-    ) -> None:
-        # Carnivores can only bite herbivores that are not hiding
-        if (
-            isinstance(target, Herbivore)
-            and not target.hidden
-        ):
+    def bite(self, target: Animal) -> None:
+        if isinstance(target, Herbivore) and not target.hidden:
             target.health -= 50
             if target.health <= 0:
-                Animal.alive.remove(target)
+                if target in Animal.alive:
+                    Animal.alive.remove(target)
 
 
-def bite(
-    target: Animal
-) -> None:
-    # Logic to find a carnivore to perform the action
-    # usually the last created carnivore in the alive list
-    for animal in reversed(Animal.alive):
+def bite(target: Animal) -> None:
+    for animal in Animal.alive:
         if isinstance(animal, Carnivore):
             animal.bite(target)
             break
