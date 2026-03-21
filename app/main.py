@@ -40,3 +40,13 @@ class Carnivore(Animal):
             target.health -= 50
             if target.health <= 0:
                 Animal.alive.remove(target)
+
+
+def bite(
+    target: Animal
+) -> None:
+    # Find the most recently created Carnivore to perform the action
+    for animal in reversed(Animal.alive):
+        if isinstance(animal, Carnivore):
+            animal.bite(target)
+            break
