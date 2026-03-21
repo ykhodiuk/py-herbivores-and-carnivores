@@ -1,5 +1,4 @@
 class Animal:
-    # [CHECKLIST ITEM #Code Style.6] Type annotation
     alive: list["Animal"] = []
 
     def __init__(
@@ -7,7 +6,7 @@ class Animal:
             name: str,
             health: int = 100,
             hidden: bool = False
-    ) -> None:  # [CHECKLIST ITEM #Code Style.5] Multi-line args
+    ) -> None:
         self.name = name
         self._health = health
         self.hidden = hidden
@@ -42,9 +41,6 @@ class Herbivore(Animal):
 
 class Carnivore(Animal):
     def bite(self, target: "Animal") -> None:
-        """
-        Method-based logic for the reviewer.
-        """
         if (
                 self.health > 0
                 and isinstance(target, Herbivore)
@@ -54,13 +50,8 @@ class Carnivore(Animal):
             target.health -= 50
 
 
-# Two blank lines here to satisfy flake8 E302
 def bite(target: Animal) -> None:
-    """
-    Standalone function for the tests.
-    It finds a predator from the environment to perform the action.
-    """
-    for predator in Animal.alive:
-        if isinstance(predator, Carnivore):
-            predator.bite(target)
+    for animal in Animal.alive:
+        if isinstance(animal, Carnivore):
+            animal.bite(target)
             break
